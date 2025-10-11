@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <div id="reaper-manual">
-  Cargando enlace...
+  Searching latest Reaper User Guide Version available...
 </div>
 
 <script>
@@ -9,7 +9,7 @@ fetch('latest.txt')
   .then(res => res.text())
   .then(url => {
     document.getElementById('reaper-manual').innerHTML =
-      `<a href="${url}" target="_blank">Abrir último manual de Reaper</a>`;
+      `<a href="${url}" target="_blank">Open latest Reaper User Guide</a>`;
   })
   .catch(err => {
     document.getElementById('reaper-manual').innerText =
