@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<div id="reaper-url">
+  Buscando la URL del manual...
+</div>
+
+<script>
+(async function() {
+  try {
+    // Hipotético fetch de la página de Reaper
+    const res = await fetch('https://www.reaper.fm/userguide.php');
+    const text = await res.text();
+
+    // Regex para encontrar PDFs tipo ReaperUserGuide681c.pdf
+    const re = /ReaperUserGuide(\d+[a-zA-Z]*)\.pdf/gi;
+    let match;
+    const found = [];
+
+    while ((match = re.exec(text)) !== null) {
+      const ver = match[1];
+      const numMatch = ver.match(/^(\d+)/);
+      const num = numMatch ? parseInt(numMatch[1], 10) : 0;
+      const full = 'https://www.reaper.fm/userguide/ReaperUserGuide' + ver + '.pdf';
+      found.push({ ver, num, full });
+    }
+
+    if (found.length === 0) {
+      document.getElementById('reaper-url').innerText = "No se encontró el manual.";
+      return;
+    }
+
+    // Ordenar por número descendente y sufijo
+    found.sort((a,b) => {
+      if(a.num !== b.num) return b.num - a.num;
+      const aSuf = a.ver.replace(/^\d+/, '');
+      const bSuf = b.ver.replace(/^\d+/, '');
+      if(aSuf && !bSuf) return -1;
+      if(!aSuf && bSuf) return 1;
+      return bSuf.localeCompare(aSuf);
+    });
+
+    const latest = found[0];
+
+    // Solo mostrar la URL como texto
+    document.getElementById('reaper-url').innerHTML = latest.full;
+
+  } catch(e) {
+    document.getElementById('reaper-url').innerText = "Error al obtener la URL.";
+    console.error(e);
+  }
+})();
+</script>
+</html>
